@@ -131,6 +131,7 @@ class Scraping:
                     parser_type = getattr(module, source.capitalize())
                     parser: Parser = parser_type()
                     data = parser.scrape(number, self)
+                    print('[goodick] searchAdult-data:', data)
                     if data == 404:
                         continue
                     json_data = json.loads(data)

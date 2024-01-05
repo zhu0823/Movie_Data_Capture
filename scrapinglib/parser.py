@@ -68,7 +68,9 @@ class Parser:
         # 每次调用，初始化参数
         self.init()
         self.updateCore(core)
+        print("[goodick] scrape-core:", core)
         result = self.search(number)
+        print("[goodick] scrape-result:", result)
         return result
 
     def search(self, number):
@@ -85,10 +87,13 @@ class Parser:
             self.detailurl = self.specifiedUrl
         else:
             self.detailurl = self.queryNumberUrl(number)
+        print("[goodick] search-detailurl:", self.detailurl)
         if not self.detailurl:
             return 404
         htmltree = self.getHtmlTree(self.detailurl)
+        print("[goodick] search-htmltree:", htmltree)
         result = self.dictformat(htmltree)
+        print("[goodick] search-result:", result)
         return result
 
     def updateCore(self, core):
@@ -136,6 +141,7 @@ class Parser:
         if resp == 404:
             return 404
         ret = etree.fromstring(resp, etree.HTMLParser())
+        print("[goodick] getHtmlTree-ret:", ret)
         return ret
 
     def dictformat(self, htmltree):
@@ -165,12 +171,16 @@ class Parser:
                 'source': self.source,
                 'imagecut': self.getImagecut(htmltree),
             }
+            print("[goodick] dictformat-dic:", dic)
             dic = self.extradict(dic)
+            print("[goodick] dictformat-extradict:", dic)
         except Exception as e:
             if config.getInstance().debug():
                 print(e)
             dic = {"title": ""}
+            print("[goodick] dictformat-Exception:", dic)
         js = json.dumps(dic, ensure_ascii=False, sort_keys=True, separators=(',', ':'))
+        print("[goodick] dictformat-js:", js)
         return js
 
     def extradict(self, dic:dict):
